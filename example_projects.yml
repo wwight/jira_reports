@@ -1,0 +1,13 @@
+- name: Project 1
+  query: project = PROJ1
+  dev_days:
+    2017-01-02: 1, 1, 1, 1, 1
+- name: Project 2
+  query: project = PROJ1
+  dev_days:
+    2017-01-02: 3, 4, 3, 3, 4
+
+# DISABLED PROJECTS
+- name: Project 3
+  query: project = PROJ3
+  disabled: true
