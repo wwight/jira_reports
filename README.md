@@ -5,6 +5,13 @@ This makes pretty graphs for JIRA status updates.
 
 ### Setup
 
+Install dependencies
+```
+sudo pip install requests
+sudo pip install matplotlib
+sudo pip install pyyaml
+```
+
 ```
 cp example_jira.cfg jira.cfg
 ```
@@ -16,13 +23,6 @@ cp example_projects.yml projects.yml
 ```
 
 Fill in your project data.
-
-Install dependencies
-```
-sudo pip install requests
-sudo pip install matplotlib
-sudo pip install pyyaml
-```
 
 ### usage
 
