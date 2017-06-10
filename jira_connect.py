@@ -48,7 +48,7 @@ class JIRA(object):
 
         self.cache_directory = config.get('cache', 'directory')
 
-        self.high_priorities = config.get('jira', 'high_priorities') or ContainsEverything()
+        self.high_priorities = config.get('jira', 'white_list_priorities') or ContainsEverything()
         self.done_statuses = config.get('jira', 'done_statuses')
         self.story_points_field = config.get('jira', 'story_points_field')
 
