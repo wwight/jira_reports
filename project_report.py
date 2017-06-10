@@ -22,7 +22,7 @@ import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import matplotlib.ticker as plticker
 
-from utils import created_and_closed_by_date, devs_per_day, load_projects, DATE_FORMAT, PROJECTS_FILE, HIGH_P
+from utils import created_and_closed_by_date, devs_per_day, load_projects, DATE_FORMAT, PROJECTS_FILE
 from jira_connect import JIRA
 
 
@@ -328,7 +328,7 @@ def graph_projects(all_sections, file_name):
     plt.savefig(file_name, bbox_inches='tight')
 
 
-def predict_completion(project, issues):
+def predict_completion(project, issues, high_priorities, done_statuses, story_points_field):
     project_name = project['name']
     print '\nPROJECT: %s' % project_name
 
@@ -349,10 +349,10 @@ def predict_completion(project, issues):
         print '0 dev-days recorded'
     print '-' * 20
 
-    for use_story_points in (True, False):
+    for use_story_points in (story_points_field, False):
         units = 'points' if use_story_points else 'stories'
         created_by_date, closed_by_date = created_and_closed_by_date(
-            issues, HIGH_P, use_story_points=use_story_points)
+            issues, high_priorities, done_statuses, use_story_points)
         num_created = sum(created_by_date.itervalues())
         num_closed = sum(closed_by_date.itervalues())
         num_left = num_created - num_closed
@@ -392,9 +392,9 @@ def main():
             if i['fields']['issuetype']['name'] != 'Epic']
 
         if not graph_type or graph_type == 'completion':
-            predict_completion(project, issues)
+            predict_completion(project, issues, jira.high_priorities, jira.done_statuses, jira.story_points_field)
 
-        created_by_date, closed_by_date = created_and_closed_by_date(issues, HIGH_P)
+        created_by_date, closed_by_date = created_and_closed_by_date(issues, jira.high_priorities, jira.done_statuses)
         num_created = sum(created_by_date.itervalues())
         num_closed = sum(closed_by_date.itervalues())
         percent_complete = round(100.0 * num_closed / num_created)
@@ -407,7 +407,7 @@ def main():
 
         if not graph_type or graph_type == 'points':
             if 'dev_days' in project:
-                _, points_closed_by_date = created_and_closed_by_date(issues, HIGH_P, use_story_points=True)
+                _, points_closed_by_date = created_and_closed_by_date(issues, jira.high_priorities, jira.done_statuses, jira.story_points_field)
                 graph_daily_rates(
                     project,
                     points_closed_by_date,

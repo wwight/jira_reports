@@ -26,6 +26,11 @@ def print_verbose(string):
         print(string)
 
 
+class ContainsEverything(object):
+    def __contains__(self, value):
+        return True
+
+
 class JIRA(object):
     SEARCH_API = 'https://%s/rest/api/2/search?maxResults=-1&jql='
     BAD_HOSTNAME = re.compile('https?:\/\/')
@@ -42,6 +47,10 @@ class JIRA(object):
         self.password = config.get('user', 'password')
 
         self.cache_directory = config.get('cache', 'directory')
+
+        self.high_priorities = config.get('jira', 'high_priorities') or ContainsEverything()
+        self.done_statuses = config.get('jira', 'done_statuses')
+        self.story_points_field = config.get('jira', 'story_points_field')
 
         self.session = requests.session()
 
